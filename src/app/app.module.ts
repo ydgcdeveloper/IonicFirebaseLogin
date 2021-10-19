@@ -7,15 +7,21 @@ import {IonicModule, IonicRouteStrategy} from "@ionic/angular";
 import {AppComponent} from "./app.component";
 import {AppRoutingModule} from "./app-routing.module";
 
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { environment } from "src/environments/environment";
-
+import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
+import {environment} from "src/environments/environment";
+import { AppStoreModule } from "src/store/AppStoreModule";
+import { StoreDevtools, StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { LoadingComponent } from "./loading/loading.component";
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, LoadingComponent],
   entryComponents: [],
   imports: [
-    BrowserModule, IonicModule.forRoot(), AppRoutingModule, 
+    BrowserModule, 
+    IonicModule.forRoot(), 
+    AppRoutingModule, 
+    ...AppStoreModule,
+    StoreDevtoolsModule.instrument({maxAge: 25}),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig))
   ],
   providers: [
