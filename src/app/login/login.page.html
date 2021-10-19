@@ -22,7 +22,7 @@
           </ion-item>
           <app-error-message [field]="form.get('password')" error="required" message="Password is required"></app-error-message>
 
-          <ion-button color="dark" fill="clear" [disabled]="!form.get('email').valid" size="full">Forgot password</ion-button>
+          <ion-button color="dark" fill="clear" (click)="forgotEmailPassword()" [disabled]="!form.get('email').valid" size="full">Forgot password</ion-button>
           <ion-button color="primary" size="full" [disabled]="!form.valid" (click)="login()">
             Login
             <ion-spinner *ngIf="spinner" name="circles" slot="end" size="small"></ion-spinner>
