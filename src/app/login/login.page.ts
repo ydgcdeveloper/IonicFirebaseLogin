@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import { Store } from "@ngrx/store";
 import { AppState } from "src/store/AppState";
 import { hide, show } from "src/store/loading/loading.actions";
+import { recoverPassword } from "src/store/login/login.actions";
 import { LoginPageForm } from "./login.form.page";
 
 @Component({selector: "app-login", templateUrl: "./login.page.html", styleUrls: ["./login.page.scss"]})
@@ -19,14 +20,16 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.spinner = false;
     this.form = new LoginPageForm(this.formBuilder).createForm();
+
+    this.store.select('login').subscribe(loginState => {
+      if(loginState.isRecoveringPassword){
+        this.store.dispatch(show());
+      }
+    })
   }
 
   forgotEmailPassword(){
-    this.store.dispatch(show());
-    
-    setTimeout(() => {
-      this.store.dispatch(hide())
-    }, 2000);
+    this.store.dispatch(recoverPassword())
   }
 
   login() {
