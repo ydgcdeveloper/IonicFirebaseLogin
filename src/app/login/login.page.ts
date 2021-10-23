@@ -14,16 +14,13 @@ import {LoginPageForm} from "./login.form.page";
 @Component({selector: "app-login", templateUrl: "./login.page.html", styleUrls: ["./login.page.scss"]})
 export class LoginPage implements OnInit,
 OnDestroy {
-  private spinner: boolean;
   form: FormGroup;
   loginStateSubscription: Subscription;
 
   constructor(private router : Router, private formBuilder : FormBuilder, private authService : AuthService, private toastController : ToastController, private store : Store<AppState>) {
-    this.spinner = false;
   }
 
   ngOnInit() {
-    this.spinner = false;
     this.form = new LoginPageForm(this.formBuilder).createForm();
 
     this.loginStateSubscription = this.store.select("login").subscribe((loginState) => {
@@ -72,9 +69,6 @@ OnDestroy {
   }
 
   login() {
-    this.spinner = true;
-    setTimeout(() => {
-      this.router.navigate(["home"]);
-    }, 1000);
+    
   }
 }
