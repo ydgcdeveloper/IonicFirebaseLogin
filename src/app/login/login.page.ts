@@ -6,7 +6,7 @@ import {Store} from "@ngrx/store";
 import {Subscription} from "rxjs";
 import {AppState} from "src/store/AppState";
 import {hide, show} from "src/store/loading/loading.actions";
-import {recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "src/store/login/login.actions";
+import {login, recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "src/store/login/login.actions";
 import {LoginState} from "src/store/login/LoginState";
 import {AuthService} from "../services/auth/auth.service";
 import {LoginPageForm} from "./login.form.page";
@@ -17,8 +17,7 @@ OnDestroy {
   form: FormGroup;
   loginStateSubscription: Subscription;
 
-  constructor(private router : Router, private formBuilder : FormBuilder, private authService : AuthService, private toastController : ToastController, private store : Store<AppState>) {
-  }
+  constructor(private router : Router, private formBuilder : FormBuilder, private authService : AuthService, private toastController : ToastController, private store : Store<AppState>) {}
 
   ngOnInit() {
     this.form = new LoginPageForm(this.formBuilder).createForm();
@@ -27,6 +26,8 @@ OnDestroy {
       this.onIsRecoveredPassword(loginState);
       this.onIsRecoveringPassword(loginState);
       this.onIsRecoverPasswordFail(loginState);
+
+      this.toggleLoading(loginState)
     });
   }
 
@@ -36,10 +37,16 @@ OnDestroy {
     }
   }
 
+  private toggleLoading(loginState : LoginState) {
+    if (loginState.isLoggingIn || loginState.isRecoveringPassword) {
+      this.store.dispatch(show());
+    } else {
+      this.store.dispatch(hide());
+    }
+  }
+
   private onIsRecoveringPassword(loginState : LoginState) {
     if (loginState.isRecoveringPassword) {
-      this.store.dispatch(show());
-
       this.authService.recoverEmailPassword(this.form.get("email").value).subscribe(() => {
         this.store.dispatch(recoverPasswordSuccess());
       }, (error) => {
@@ -50,7 +57,6 @@ OnDestroy {
 
   private async onIsRecoveredPassword(loginState : LoginState) {
     if (loginState.isRecoveredPassword) {
-      this.store.dispatch(hide());
       const toaster = await this.toastController.create({position: "bottom", message: "Recovery email sent", color: "success"});
       toaster.present();
     }
@@ -58,7 +64,6 @@ OnDestroy {
 
   private async onIsRecoverPasswordFail(loginState : LoginState) {
     if (loginState.error) {
-      this.store.dispatch(hide());
       const toaster = await this.toastController.create({position: "bottom", message: loginState.error.message, color: "danger"});
       toaster.present();
     }
@@ -69,6 +74,6 @@ OnDestroy {
   }
 
   login() {
-    
+    this.store.dispatch(login());
   }
 }
