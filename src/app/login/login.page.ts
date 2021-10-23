@@ -6,7 +6,7 @@ import {Store} from "@ngrx/store";
 import {Subscription} from "rxjs";
 import {AppState} from "src/store/AppState";
 import {hide, show} from "src/store/loading/loading.actions";
-import {login, loginSuccess, recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "src/store/login/login.actions";
+import {login, loginFail, loginSuccess, recoverPassword, recoverPasswordFail, recoverPasswordSuccess} from "src/store/login/login.actions";
 import {LoginState} from "src/store/login/LoginState";
 import {AuthService} from "../services/auth/auth.service";
 import {LoginPageForm} from "./login.form.page";
@@ -85,6 +85,8 @@ OnDestroy {
       const password = this.form.get("password").value;
       this.authService.login(email, password).subscribe((user) => {
         this.store.dispatch(loginSuccess({user}));
+      }, error => {
+        this.store.dispatch(loginFail({error}))
       });
     }
   }
