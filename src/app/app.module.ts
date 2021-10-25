@@ -1,28 +1,29 @@
-import {NgModule} from "@angular/core";
-import {BrowserModule} from "@angular/platform-browser";
-import {RouteReuseStrategy} from "@angular/router";
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { RouteReuseStrategy } from "@angular/router";
 
-import {IonicModule, IonicRouteStrategy} from "@ionic/angular";
+import { IonicModule, IonicRouteStrategy } from "@ionic/angular";
 
-import {AppComponent} from "./app.component";
-import {AppRoutingModule} from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { AppRoutingModule } from "./app-routing.module";
 
-import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
-import {environment} from "src/environments/environment";
+import { environment } from "src/environments/environment";
 import { AppStoreModule } from "src/store/AppStoreModule";
-import { StoreDevtools, StoreDevtoolsModule } from "@ngrx/store-devtools";
+import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { LoadingComponent } from "./loading/loading.component";
+import { AngularFireModule } from "@angular/fire/compat";
+
 
 @NgModule({
   declarations: [AppComponent, LoadingComponent],
   entryComponents: [],
   imports: [
-    BrowserModule, 
-    IonicModule.forRoot(), 
-    AppRoutingModule, 
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     ...AppStoreModule,
-    StoreDevtoolsModule.instrument({maxAge: 25}),
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig))
+    StoreDevtoolsModule.instrument({ maxAge: 25 }),
   ],
   providers: [
     {
@@ -32,4 +33,4 @@ import { LoadingComponent } from "./loading/loading.component";
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
