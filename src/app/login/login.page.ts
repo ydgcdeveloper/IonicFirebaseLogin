@@ -25,11 +25,11 @@ OnDestroy {
     this.loginStateSubscription = this.store.select("login").subscribe((loginState) => {
       this.onIsRecoveredPassword(loginState);
       this.onIsRecoveringPassword(loginState);
-      this.onIsRecoverPasswordFail(loginState);
-
+      
       this.onIsLoggingIn(loginState);
       this.onIsLoggedIn(loginState);
-
+      
+      this.onError(loginState);
       this.toggleLoading(loginState);
     });
   }
@@ -65,7 +65,7 @@ OnDestroy {
     }
   }
 
-  private async onIsRecoverPasswordFail(loginState : LoginState) {
+  private async onError(loginState : LoginState) {
     if (loginState.error) {
       const toaster = await this.toastController.create({position: "bottom", message: loginState.error.message, color: "danger"});
       toaster.present();
