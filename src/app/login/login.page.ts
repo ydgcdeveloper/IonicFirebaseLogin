@@ -28,6 +28,7 @@ OnDestroy {
       this.onIsRecoverPasswordFail(loginState);
 
       this.onIsLoggingIn(loginState);
+      this.onIsLoggedIn(loginState);
 
       this.toggleLoading(loginState);
     });
@@ -88,6 +89,12 @@ OnDestroy {
       }, error => {
         this.store.dispatch(loginFail({error}))
       });
+    }
+  }
+
+  private async onIsLoggedIn(loginState : LoginState) {
+    if(loginState.isLoggedIn){
+      this.router.navigate(['home'])
     }
   }
 }
